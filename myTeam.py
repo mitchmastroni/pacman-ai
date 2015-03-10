@@ -83,6 +83,4 @@ class DummyAgent(CaptureAgent):
     actions = gameState.getLegalActions(self.index)
     #print self.getMyFoodList(gameState)
     #print self.getEnemyFoodList(gameState)
-    return random.choice(actions)
-
- # Finding power pellet,  
+    return random.choice(actions) 

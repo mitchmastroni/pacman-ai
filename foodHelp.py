@@ -46,6 +46,7 @@ def getClosestFoodPosition(agent,gameState,agentIndex):
   return foodPos
 
 def getClosestAgent(agent,position,gameState,agentList):
+  # Returns the agent closest to a specific position.
   bestDistance = 99999999999
   bestAgent = "None"
   for theAgent in agentList:
@@ -57,6 +58,31 @@ def getClosestAgent(agent,position,gameState,agentList):
       bestDistance = distance
       bestAgent = theAgent
   return bestAgent
+
+def getClosestEnemyPelletPosition(agent,gameState,agentIndex):
+  # Gets the position of the closest enemy pellet to the agent.
+  bestDistance = 99999999999
+  capsulePos = (0,0)
+  capsuleList = agent.getCapsules(gameState)
+  for pos in capsuleList:
+    distance = agent.getMazeDistance(pos,gameState.getAgentPosition(agentIndex))
+    if distance < bestDistance:
+      bestDistance = distance
+      capsulePos = pos
+  return capsulePos
+
+def getClosestTeamPelletPosition(agent,gameState,agentIndex):
+  # Gets the position of the closest of our pellet to the agent.
+  bestDistance = 99999999999
+  capsulePos = (0,0)
+  capsuleList = agent.getCapsulesYouAreDefending(gameState)
+  for pos in capsuleList:
+    distance = agent.getMazeDistance(pos,gameState.getAgentPosition(agentIndex))
+    if distance < bestDistance:
+      bestDistance = distance
+      capsulePos = pos
+  return capsulePos
+
 
   # TODO:
   # Finding power pellet,  
