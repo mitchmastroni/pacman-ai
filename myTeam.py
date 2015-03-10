@@ -10,6 +10,7 @@ from captureAgents import CaptureAgent
 import random, time, util
 from game import Directions
 import game
+import foodHelp
 
 #################
 # Team creation #
@@ -82,48 +83,6 @@ class DummyAgent(CaptureAgent):
     actions = gameState.getLegalActions(self.index)
     #print self.getMyFoodList(gameState)
     #print self.getEnemyFoodList(gameState)
-    print self.getClosestFoodPosition(gameState,self.index)
     return random.choice(actions)
 
-  def getMyFoodList(self,gameState):
-    # Getting our food and getting indicies of each of our food's location
-    myFoodList = []
-    self.myFood = self.getFoodYouAreDefending(gameState)
-    xCounter = 0
-    yCounter = 0
-    for x in self.myFood:
-      for y in x:
-	if True == y:
-	  myFoodList.append((xCounter,yCounter))
-        yCounter += 1
-      xCounter += 1
-      yCounter = 0
-    return myFoodList
-
-  def getEnemyFoodList(self,gameState):
-    # Getting enemy fod and getting indicies of each of their food's location
-    enemyFoodList = []
-    self.enemyFood = self.getFood(gameState)
-    xCounter = 0
-    yCounter = 0
-    for x in self.enemyFood:
-      for y in x:
-	if True == y:
-	  enemyFoodList.append((xCounter,yCounter))
-        yCounter += 1
-      xCounter += 1
-      yCounter = 0
-    return enemyFoodList
-
-  def getClosestFoodPosition(self,gameState,agentIndex):
-    bestDistance = 999999999999
-    foodPos = (0,0)
-    enemyFoodList = self.getEnemyFoodList(gameState)
-    print enemyFoodList
-    for pos in enemyFoodList:
-      distance = self.getMazeDistance(pos,gameState.getAgentPosition(agentIndex))
-      if distance < bestDistance:
-        bestDistance = distance
-        foodPos = pos
-    return foodPos
- 
+ # Finding power pellet,  
