@@ -81,6 +81,6 @@ class DummyAgent(CaptureAgent):
     Picks among actions randomly.
     """
     actions = gameState.getLegalActions(self.index)
-    #print self.getMyFoodList(gameState)
+    print foodHelp.getClosestTeamCapsulePosition(self,gameState,self.index)
     #print self.getEnemyFoodList(gameState)
     return random.choice(actions) 
