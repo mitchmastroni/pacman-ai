@@ -81,6 +81,16 @@ class DummyAgent(CaptureAgent):
     Picks among actions randomly.
     """
     actions = gameState.getLegalActions(self.index)
-    print foodHelp.getClosestTeamCapsulePosition(self,gameState,self.index)
+    food = foodHelp.getClosestFoodPosition(self,gameState,self.index)
+    bestAction = random.choice(actions)
+    bestDist = 999
+    #if ghosts and food are more than 10 away, continue as reflex
+    for action in actions:
+      dist = CaptureAgent.getMazeDistance(self, gameState.generateSuccessor(self.index, action).getAgentPosition(self.index), food)
+      if dist < bestDist:
+        bestDist = dist
+        bestAction = action
+    #else, perform minimax
+    
     #print self.getEnemyFoodList(gameState)
-    return random.choice(actions) 
+    return bestAction
