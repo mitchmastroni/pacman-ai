@@ -11,7 +11,7 @@ import random, time, util
 from game import Directions
 import game
 import foodHelp
-
+import defenseAgent
 #################
 # Team creation #
 #################
@@ -83,6 +83,10 @@ class DummyAgent(CaptureAgent):
     actions = gameState.getLegalActions(self.index)
     food = foodHelp.getClosestFoodPosition(self,gameState,self.index)
     bestAction = random.choice(actions)
+    inferenceAgent = defenseAgent.ExactInference(1)
+    inferenceAgent.initialize(gameState)
+    inferenceAgent.initializeUniformly(gameState)
+    print inferenceAgent.beliefs
     bestDist = 999
     #if ghosts and food are more than 10 away, continue as reflex
     for action in actions:
