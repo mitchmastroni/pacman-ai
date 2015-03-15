@@ -36,7 +36,7 @@ def getEnemyFoodList(dummyAgent,gameState):
 def getClosestFoodPosition(dummyAgent,gameState,agentIndex):
   # Gets the position of the food closest to this agent.
   bestDistance = 999999999999
-  foodPos = (0,0)
+  foodPos = None
   enemyFoodList = getEnemyFoodList(dummyAgent,gameState)
   for pos in enemyFoodList:
     distance = dummyAgent.getMazeDistance(pos,gameState.getAgentPosition(agentIndex))
@@ -48,7 +48,7 @@ def getClosestFoodPosition(dummyAgent,gameState,agentIndex):
 def getClosestAgent(dummyAgent,position,gameState,agentList):
   # Returns the agent closest to a specific position.
   bestDistance = 99999999999
-  bestAgent = "None"
+  bestAgent = None
   for theAgent in agentList:
     print theAgent
     print position
@@ -62,10 +62,10 @@ def getClosestAgent(dummyAgent,position,gameState,agentList):
 def getClosestEnemyCapsulePosition(dummyAgent,gameState,agentIndex):
   # Gets the position of the closest enemy pellet to the agent.
   bestDistance = 99999999999
-  capsulePos = (0,0)
+  capsulePos = None
   capsuleList = dummyAgent.getCapsules(gameState)
   if capsuleList == []:
-    return "None"
+    return None
   for pos in capsuleList:
     distance = dummyAgent.getMazeDistance(pos,gameState.getAgentPosition(agentIndex))
     if distance < bestDistance:
@@ -76,10 +76,10 @@ def getClosestEnemyCapsulePosition(dummyAgent,gameState,agentIndex):
 def getClosestTeamCapsulePosition(dummyAgent,gameState,agentIndex):
   # Gets the position of the closest of our pellet to the agent.
   bestDistance = 99999999999
-  capsulePos = (0,0)
+  capsulePos = None
   capsuleList = dummyAgent.getCapsulesYouAreDefending(gameState)
   if capsuleList == []:
-    return "None"
+    return None
   for pos in capsuleList:
     distance = dummyAgent.getMazeDistance(pos,gameState.getAgentPosition(agentIndex))
     if distance < bestDistance:
@@ -87,6 +87,11 @@ def getClosestTeamCapsulePosition(dummyAgent,gameState,agentIndex):
       capsulePos = pos
   return capsulePos
 
-
-  # TODO:
-  # Finding power pellet,  
+def getGridSize(foodGrid):
+  countX = 0
+  countY = 0
+  for x in foodGrid:
+    countX = countX + 1
+  for y in foodGrid[1]:
+    countY = countY + 1
+  return (countX,countY)
