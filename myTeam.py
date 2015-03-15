@@ -7,7 +7,7 @@
 # For more info, see http://inst.eecs.berkeley.edu/~cs188/sp09/pacman.html
 
 from captureAgents import CaptureAgent
-import random, time, util
+import random, time, util, operator
 from game import Directions
 import game
 import foodHelp
@@ -81,20 +81,29 @@ class DummyAgent(CaptureAgent):
     Picks among actions randomly.
     """
     actions = gameState.getLegalActions(self.index)
+    bestAction = "Stop"
     food = foodHelp.getClosestFoodPosition(self,gameState,self.index)
-    bestAction = random.choice(actions)
-    inferenceAgent = defenseAgent.ExactInference(1)
-    inferenceAgent.initialize(gameState)
-    inferenceAgent.initializeUniformly(gameState)
-    print inferenceAgent.beliefs
-    bestDist = 999
-    #if ghosts and food are more than 10 away, continue as reflex
-    for action in actions:
-      dist = CaptureAgent.getMazeDistance(self, gameState.generateSuccessor(self.index, action).getAgentPosition(self.index), food)
-      if dist < bestDist:
-        bestDist = dist
-        bestAction = action
-    #else, perform minimax
-    
-    #print self.getEnemyFoodList(gameState)
+    enemies = [0,2]
+    enemyPos = util.Counter()
+    enemyClose = 0
+    for enemy in enemies:
+      inferenceAgent = defenseAgent.ExactInference(enemy)
+      inferenceAgent.initialize(gameState)
+      inferenceAgent.initializeUniformly(gameState)
+      enemyPos[enemy] = max(inferenceAgent.beliefs.iteritems(), key=operator.itemgetter(1))[0]
+    prox = 10
+    for enemy in enemies:
+      if CaptureAgent.getMazeDistance(self, enemyPos[enemy], gameState.getAgentPosition(self.index)) < prox:
+        enemyClose += 1
+    #ghosts are sufficiently far away
+    if enemyClose < 1:
+      bestDist = 999
+      for action in actions:
+        dist = CaptureAgent.getMazeDistance(self, gameState.generateSuccessor(self.index, action).getAgentPosition(self.index), food)
+        if dist < bestDist:
+          bestDist = dist
+          bestAction = action
+    #ghosts are close
+    else:
+      print "OH NOOOO"
     return bestAction
