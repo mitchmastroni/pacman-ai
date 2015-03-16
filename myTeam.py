@@ -17,7 +17,7 @@ import defenseAgent, expectimax
 #################
 
 def createTeam(firstIndex, secondIndex, isRed,
-               first = 'DummyAgent', second = 'DummyAgent'):
+               first = 'PakuAgent', second = 'PakuAgent'):
   """
   This function should return a list of two agents that will form the
   team, initialized using firstIndex and secondIndex as their agent
@@ -40,7 +40,7 @@ def createTeam(firstIndex, secondIndex, isRed,
 # Agents #
 ##########
 
-class DummyAgent(CaptureAgent):
+class PakuAgent(CaptureAgent):
   """
   A Dummy agent to serve as an example of the necessary agent structure.
   You should look at baselineTeam.py for more details about how to
@@ -75,6 +75,10 @@ class DummyAgent(CaptureAgent):
     self.myFood = self.getFoodYouAreDefending(gameState)
     self.myTeam = self.getTeam(gameState)
     self.enemyTeam = self.getOpponents(gameState)
+    if gameState.isOnRedTeam(self.index):
+      self.enemies = gameState.getBlueTeamIndices()
+    else:
+      self.enemies = gameState.getRedTeamIndices()
 
   def chooseAction(self, gameState):
     """
@@ -83,27 +87,27 @@ class DummyAgent(CaptureAgent):
     actions = gameState.getLegalActions(self.index)
     bestAction = "Stop"
     food = foodHelp.getClosestFoodPosition(self,gameState,self.index)
-    enemies = [0,2]
     enemyPos = util.Counter()
     enemyClose = 0
-    for enemy in enemies:
+    # determine distance from agent to ghosts
+    for enemy in self.enemies:
       inferenceAgent = defenseAgent.ExactInference(enemy)
       inferenceAgent.initialize(gameState)
       inferenceAgent.initializeUniformly(gameState)
       enemyPos[enemy] = max(inferenceAgent.beliefs.iteritems(), key=operator.itemgetter(1))[0]
     prox = 10
-    for enemy in enemies:
+    for enemy in self.enemies:
       if CaptureAgent.getMazeDistance(self, enemyPos[enemy], gameState.getAgentPosition(self.index)) < prox:
         enemyClose += 1
-    #ghosts are sufficiently far away
-    if enemyClose > 1:
+    # ghosts are sufficiently far away, go towards closest food
+    if enemyClose < 1:
       bestDist = 999
       for action in actions:
         dist = CaptureAgent.getMazeDistance(self, gameState.generateSuccessor(self.index, action).getAgentPosition(self.index), food)
         if dist < bestDist:
           bestDist = dist
           bestAction = action
-    #ghosts are close
+    # ghosts are close, use minimax to decide path
     else:
       print "minimax"
       maxAgent = expectimax.MinimaxAgent()

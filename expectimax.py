@@ -1,5 +1,6 @@
 from game import Agent
 import foodHelp
+
 class MinimaxAgent(Agent):
   def getAction(self, gameState, agent):
     print "minimax!"
@@ -14,13 +15,14 @@ class MinimaxAgent(Agent):
         if val > bestVal:
           bestVal = val
           bestAction = action
+          
     return bestAction	
 	
   def max (self, depth, agent, gameState):
     print "max at depth", depth
     if depth <= 0 or gameState.isOver():
       return self.evaluationFunction(gameState)
-    bestVal = -999
+    bestVal = -9999
     if (agent + 1) == gameState.getNumAgents():
       nextAgent = 0
       nextDepth = depth - 1 
@@ -36,6 +38,7 @@ class MinimaxAgent(Agent):
           val = self.min(depth - 1, nextAgent, gameState.generateSuccessor(agent, action))
           if val > bestVal:
             bestVal = val
+            
     return bestVal
 
   def min (self, depth, agent, gameState):
@@ -55,12 +58,13 @@ class MinimaxAgent(Agent):
             bestVal = val
     else:
       nextAgent = agent + 1
-      print gameState
+      print gameState.getLegalActions(agent)
       for action in gameState.getLegalActions(agent):
         if action != "Stop":
           val = self.max(nextDepth, nextAgent, gameState.generateSuccessor(agent, action))
           if val < bestVal:
             bestVal = val
+            
     return bestVal
 	
   def evaluationFunction(self, gameState, agent):
@@ -70,6 +74,8 @@ class MinimaxAgent(Agent):
         val += 1000
       else:
         val -= 1000
-    val -=  (20 - foodHelp.getMyFoodList()) * 5
-    val +=  (20 - foodHelp.getEnemyFoodList()) * 5
+    val -=  (20 - len(foodHelp.getEnemyFoodList())) * 5
+    val +=  gameState.getScore() * 5
+    
+    return val
 	  
