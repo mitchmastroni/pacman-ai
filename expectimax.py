@@ -8,6 +8,7 @@ class MinimaxAgent(Agent):
     bestVal = -999
     nextAgent = agent + 1
     depth = 10
+    # iterate through possible actions, keep track of the one with the highest value
     for action in gameState.getLegalActions(agent):
       print action
       if action != "Stop":
@@ -20,22 +21,21 @@ class MinimaxAgent(Agent):
 	
   def max (self, depth, agent, gameState):
     print "max at depth", depth
+    # evaluate the current state if the game has ended or if the predetermined depth has been reached
     if depth <= 0 or gameState.isOver():
       return self.evaluationFunction(gameState)
     bestVal = -9999
+    #
     if (agent + 1) == gameState.getNumAgents():
-      nextAgent = 0
-      nextDepth = depth - 1 
       for action in gameState.getLegalActions(agent):
         if action != "Stop":
-          val = self.min(nextDepth, nextAgent, gameState.generateSuccessor(agent, action))
+          val = self.min(depth - 1, 0, gameState.generateSuccessor(agent, action))
           if val < bestVal:
             bestVal = val
-    else:
-      nextAgent = agent + 1
+    else: 
       for action in gameState.getLegalActions(agent):
         if action != "Stop":
-          val = self.min(depth - 1, nextAgent, gameState.generateSuccessor(agent, action))
+          val = self.min(depth, agent + 1, gameState.generateSuccessor(agent, action))
           if val > bestVal:
             bestVal = val
             
@@ -43,25 +43,21 @@ class MinimaxAgent(Agent):
 
   def min (self, depth, agent, gameState):
     print "min at depth", depth
+    # evaluate the current state if the game has ended or if the predetermined depth has been reached
     if depth <= 0 or gameState.isOver():
       return self.evaluationFunction(gameState)
     bestVal = 9999
-    nextAgent = agent + 1
-    nextDepth = depth
     if (agent + 1) == gameState.getNumAgents():
-      nextAgent = 0
-      nextDepth = depth - 1 
       for action in gameState.getLegalActions(agent):
         if action != "Stop":
-          val = self.max(nextDepth, nextAgent, gameState.generateSuccessor(agent, action))
+          val = self.max(depth - 1, 0, gameState.generateSuccessor(agent, action))
           if val < bestVal:
             bestVal = val
     else:
-      nextAgent = agent + 1
       print gameState.getLegalActions(agent)
       for action in gameState.getLegalActions(agent):
         if action != "Stop":
-          val = self.max(nextDepth, nextAgent, gameState.generateSuccessor(agent, action))
+          val = self.max(depth, agent + 1, gameState.generateSuccessor(agent, action))
           if val < bestVal:
             bestVal = val
             
