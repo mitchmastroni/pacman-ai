@@ -11,7 +11,7 @@ import random, time, util, operator
 from game import Directions
 import game
 import foodHelp
-import defenseAgent
+import defenseAgent, expectimax
 #################
 # Team creation #
 #################
@@ -96,7 +96,7 @@ class DummyAgent(CaptureAgent):
       if CaptureAgent.getMazeDistance(self, enemyPos[enemy], gameState.getAgentPosition(self.index)) < prox:
         enemyClose += 1
     #ghosts are sufficiently far away
-    if enemyClose < 1:
+    if enemyClose > 1:
       bestDist = 999
       for action in actions:
         dist = CaptureAgent.getMazeDistance(self, gameState.generateSuccessor(self.index, action).getAgentPosition(self.index), food)
@@ -105,5 +105,7 @@ class DummyAgent(CaptureAgent):
           bestAction = action
     #ghosts are close
     else:
-      print "OH NOOOO"
+      print "minimax"
+      maxAgent = expectimax.MinimaxAgent()
+      maxAgent.getAction(gameState, self.index)
     return bestAction
